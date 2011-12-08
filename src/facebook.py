@@ -171,9 +171,20 @@ class GraphAPI(object):
         file = urllib.urlopen("https://graph.facebook.com/" + path + "?" +
                               urllib.urlencode(args), post_data)
         try:
-            response = _parse_json(file.read())
+            data = file.read()
         finally:
             file.close()
+
+        try:
+            response = _parse_json(data)
+        except ValueError:
+            # In some cases (for example, for profile picture)
+            # the Facebook graph returns raw data rather than JSON object
+            response = {"data": data,
+                        "info": file.info(),
+                        "code": file.getcode(),
+                        "url": file.geturl(),}
+
         if response.get("error"):
             raise GraphAPIError(response["error"]["type"],
                                 response["error"]["message"])

@@ -14,6 +14,20 @@ Basic usage:
     friends = graph.get_connections("me", "friends")
     graph.put_object("me", "feed", message="I am writing on my wall!")
 
+In some cases Graph API redirects to different URL, which contains raw data
+rather than JSON. For example, for profile picture. The GraphAPI object
+in this case returns a dictionary with following keys:
+
+ * **data** - raw data, loaded from the redirecting URL;
+ * **url** - actual URL, where Graph API call was redirected;
+ * **code** - final HTTP status code;
+ * **info** - meta-information, associated with the URL (see http://docs.python.org/library/urllib.html#urllib.urlopen for more details)
+
+    graph = facebook.GraphAPI()
+    response = get_object('facebook/picture', type='large')
+    with open(response['url'].rpartition('/')[2], 'wb') as file:
+        file.write(response['data'])
+
 If you are using the module within a web application with the
 [JavaScript SDK](http://github.com/facebook/connect-js), you can also use the
 module to use Facebook for login, parsing the cookie set by the JavaScript SDK
