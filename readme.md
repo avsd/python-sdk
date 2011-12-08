@@ -23,6 +23,8 @@ in this case returns a dictionary with following keys:
  * **code** - final HTTP status code;
  * **info** - meta-information, associated with the URL (see http://docs.python.org/library/urllib.html#urllib.urlopen for more details)
 
+Usage with profile pictures:
+
     graph = facebook.GraphAPI()
     response = get_object('facebook/picture', type='large')
     with open(response['url'].rpartition('/')[2], 'wb') as file:
